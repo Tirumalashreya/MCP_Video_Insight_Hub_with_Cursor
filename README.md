@@ -9,24 +9,7 @@ This project enables semantic search, Q&A, and analytics over video content usin
 
 ## Architecture Diagram
 
-```mermaid
-graph TD
-    subgraph User Interfaces
-        A[Streamlit Web UI]
-        B[Cursor IDE (MCP Client)]
-    end
-    subgraph Backend
-        C[server.py (MCP Tools)]
-        D[Video Directory (videos/)]
-        E[Ragie API]
-    end
-    A -- Upload/Select/Ingest/Analyze --> C
-    B -- Natural Language/Code Query --> C
-    C -- Reads/Writes --> D
-    C -- Video RAG, Analytics, Search --> E
-```
 
----
 
 ## Features
 - **Video Upload & Ingestion**: Upload videos via the web UI or add them to the `videos/` directory.
