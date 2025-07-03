@@ -69,3 +69,6 @@ dmypy.json
 .env
 .env.local
 .env.*.local
+
+# Videos
+videos/
