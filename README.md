@@ -1,84 +1,122 @@
-# MCP-powered video-RAG using Ragie
+# MCP Video RAG: Video Retrieval-Augmented Generation with Streamlit & Cursor
 
-This project demonstrates how to build a video-based Retrieval Augmented Generation (RAG) system powered by the Model Context Protocol (MCP). It uses [Ragie's](https://www.ragie.ai/) video ingestion and retrieval capabilities to enable semantic search and Q&A over video content and integrate them as MCP tools via Cursor IDE.
-
-We use the following tech stack:
-- Ragie for video ingestion + retrieval (video-RAG)
-- Cursor as the MCP host
+## Overview
+This project enables semantic search, Q&A, and analytics over video content using Retrieval-Augmented Generation (RAG) and the Model Context Protocol (MCP). It supports two main interfaces:
+- **Streamlit Web UI**: For uploading, ingesting, and analyzing videos in your browser.
+- **Cursor MCP Client**: For interacting with the same backend tools via natural language or code in the Cursor IDE.
 
 ---
-## Setup and Installation
 
-Ensure you have Python 3.12 or later installed on your system.
+## Architecture Diagram
 
-### Install uv
-First, let’s install uv and set up our Python project and environment:
-```bash
-# MacOS/Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Windows
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```mermaid
+graph TD
+    subgraph User Interfaces
+        A[Streamlit Web UI]
+        B[Cursor IDE (MCP Client)]
+    end
+    subgraph Backend
+        C[server.py (MCP Tools)]
+        D[Video Directory (videos/)]
+        E[Ragie API]
+    end
+    A -- Upload/Select/Ingest/Analyze --> C
+    B -- Natural Language/Code Query --> C
+    C -- Reads/Writes --> D
+    C -- Video RAG, Analytics, Search --> E
 ```
 
-### Install dependencies
-```bash
-# Create a new directory for our project
-uv init project-name
-cd project-name
+---
 
-# Create virtual environment and activate it
-uv venv
-source .venv/bin/activate  # MacOS/Linux
+## Features
+- **Video Upload & Ingestion**: Upload videos via the web UI or add them to the `videos/` directory.
+- **Semantic Search & Q&A**: Query video content using natural language.
+- **Transcripts, Highlights, Analytics**: Extract and analyze video content.
+- **Image-to-Video Search**: Find where a screenshot appears in a video.
+- **Translation**: Translate video transcripts to supported languages.
 
-.venv\Scripts\activate     # Windows
+---
 
-# Install dependencies
-uv sync
+## Setup & Installation
+
+### 1. Clone the Repository
+```sh
+git clone <your-repo-url>
+cd mcp-video-rag
 ```
 
-### Configure environment variables
-
-Copy `.env.example` to `.env` and configure the following environment variables:
-```
-RAGIE_API_KEY=your_ragie_api_key
-```
-
-## Run the project
-
-First, set up your MCP server as follows:
-- Go to Cursor settings
-- Select MCP Tools
-- Add new global MCP server.
-
-In the JSON file, add this:
-```json
-{
-    "mcpServers": {
-        "ragie": {
-            "command": "uv",
-            "args": [
-                "--directory",
-                "/absolute/path/to/project_root",
-                "run",
-                "server.py"
-            ],
-            "env": {
-                "RAGIE_API_KEY": "YOUR_RAGIE_API_KEY"
-            }
-        }
-    }
-}
+### 2. Set Up Python Environment
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt  # or use pyproject.toml with uv/poetry
 ```
 
-You should now be able to see the MCP server listed in the MCP settings. In Cursor MCP settings make sure to toggle the button to connect the server to the host.
+### 3. Install Additional Dependencies
+```sh
+pip install opencv-python streamlit
+```
 
-Done! Your server is now up and running. 
+### 4. Configure Environment Variables
+Copy `.env.example` to `.env` and set your `RAGIE_API_KEY` if required.
 
-The custom MCP server has 3 tools:
-- `ingest_data_tool`: Ingests the video data to the Ragie index
-- `retrieve_data_tool`: Retrieves relevant data from the video based on user query
-- `show_video_tool`: Creates a short video chunk from the specified segment from the original video 
+---
 
-You can now ingest your videos, retrieve relevant data and query it all using the Cursor Agent.
-The agent can even create the desired chunks from your video just with a single query.
+## Usage
+
+### Option 1: Streamlit Web UI
+1. **Start the Streamlit app:**
+   ```sh
+   source .venv/bin/activate
+   streamlit run streamlit_app.py
+   ```
+2. **Open your browser:**
+   Go to `http://localhost:8501` (or the port shown in your terminal).
+3. **Upload videos:**
+   - Use the sidebar to upload `.mp4` or `.mov` files.
+   - Click "Ingest All Videos" to process them.
+4. **Analyze videos:**
+   - Select a video from the dropdown.
+   - Use the tool panel to get transcripts, highlights, analytics, run queries, search by image, or translate transcripts.
+
+### Option 2: Cursor MCP Client
+1. **Start the MCP server:**
+   ```sh
+   source .venv/bin/activate
+   python server.py
+   ```
+2. **Configure Cursor IDE:**
+   - Go to Cursor settings > MCP Tools.
+   - Add a new MCP server pointing to your project and `server.py`.
+   - Use the Cursor agent to issue queries like:
+     - "Ingest videos"
+     - "Get transcript for cricket.mov"
+     - "Search this image in messi-goals.mp4"
+     - "Translate transcript to Hindi"
+3. **Results** will appear in the Cursor chat or output panel.
+
+---
+
+## Project Structure
+```
+mcp-video-rag/
+├── server.py           # MCP tools backend
+├── streamlit_app.py    # Streamlit web UI
+├── videos/             # Video files directory
+├── video_chunks/       # Output video chunks
+├── pyproject.toml      # Python dependencies
+├── README.md           # This file
+└── ...
+```
+
+---
+
+## Extending the Project
+- Add new MCP tools in `server.py` for more analytics or video processing.
+- Customize the Streamlit UI for your workflow.
+- Integrate with other RAG or LLM APIs as needed.
+
+---
+
+## Credits
+- Built with [Ragie](https://www.ragie.ai/), [Streamlit](https://streamlit.io/), [Cursor](https://www.cursor.so/), and [OpenCV](https://opencv.org/).
