@@ -9,6 +9,8 @@ This project enables semantic search, Q&A, and analytics over video content usin
 
 ## Architecture Diagram
 
+![videorag](https://github.com/user-attachments/assets/ff212d93-cf43-426e-b99b-3e71e6db0ef3)
+
 
 
 ## Features
