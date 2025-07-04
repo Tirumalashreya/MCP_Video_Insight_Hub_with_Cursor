@@ -96,7 +96,23 @@ mcp-video-rag/
 ```
 
 ---
-
+## mcp.json
+{
+    "mcpServers": {
+        "ragie": {
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/absolute/path/to/project_root",
+                "run",
+                "server.py"
+            ],
+            "env": {
+                "RAGIE_API_KEY": "YOUR_RAGIE_API_KEY"
+            }
+        }
+    }
+}
 ## Extending the Project
 - Add new MCP tools in `server.py` for more analytics or video processing.
 - Customize the Streamlit UI for your workflow.
